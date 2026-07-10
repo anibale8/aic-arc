@@ -639,6 +639,12 @@ body.intro-rise .project-info { opacity: 0; }
   .fg-format, .fg-location, .fg-year { grid-column: auto; grid-row: auto; }
   .project-description { max-width: 70vw; }
   .project-counter { font-size: 11px; letter-spacing: 0.04em; }
+  /* Smaller type: Image view labels, About page, map window */
+  .strip-item-label { font-size: 11px; letter-spacing: 0.04em; }
+  .info-page { font-size: 12px; }
+  .info-page h1 { font-size: 12px; }
+  .map-modal-info { font-size: 11px; letter-spacing: 0.04em; }
+  .map-modal-counter { font-size: 11px; }
 }
 
 /* Mobile browsers: use the dynamic viewport height so the address
