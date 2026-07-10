@@ -364,6 +364,11 @@ function initProject() {
     img.alt = `${p.title} — ${current + 1}`;
     counter.textContent = `${current + 1}/${p.images.length}`;
     descEl.innerHTML = `<p>${p.description || ''}</p>`;
+    // Preload the neighbouring photos so switching feels instant
+    [current + 1, current - 1].forEach(i => {
+      const n = (i + p.images.length) % p.images.length;
+      new Image().src = p.images[n].url;
+    });
   }
 
   /* Project info centred over the blurred photo for 2s,

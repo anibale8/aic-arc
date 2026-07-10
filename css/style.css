@@ -12,7 +12,8 @@
   --pad-head: 12px;
   /* Shared column grid for nav, table and project info line */
   --table-cols: 3.5rem 1.15fr 1.3fr 1.3fr 1fr;
-  --table-cols-sm: 2.5rem 2fr 1fr 3.5rem;
+  /* Mobile: all five columns, sized for a standard phone screen */
+  --table-cols-sm: 2.2rem 1.4fr 1fr 1fr 2.4rem;
   --font: 'Montserrat', 'Helvetica Neue', Arial, sans-serif;
   --transition: 0.15s ease;
 }
@@ -34,6 +35,12 @@ body.no-scroll { overflow: hidden; height: 100vh; }
 a { color: inherit; text-decoration: none; }
 img { display: block; max-width: 100%; height: auto; }
 button { font: inherit; background: none; border: none; cursor: pointer; padding: 0; color: inherit; }
+
+/* No dark tap-highlight flash on touch screens */
+a, button {
+  -webkit-tap-highlight-color: transparent;
+  touch-action: manipulation;
+}
 
 /* ===== HEADER (same line on every page) =====
    Nav items sit on the same grid as the table columns:
@@ -236,10 +243,14 @@ button { font: inherit; background: none; border: none; cursor: pointer; padding
 
 @media (max-width: 640px) {
   .projects-table { padding-top: 70px; }
+  /* Smaller type so all five columns read clearly on a phone */
   .table-header,
-  .table-row { grid-template-columns: var(--table-cols-sm); }
-  .table-header .table-cell:nth-child(4),
-  .table-row .table-cell:nth-child(4) { display: none; }
+  .table-row {
+    grid-template-columns: var(--table-cols-sm);
+    font-size: 11px;
+    letter-spacing: 0.04em;
+    padding: 5px var(--pad-x);
+  }
 }
 
 /* ===== IMAGE VIEW (grid: photos only, label on hover) ===== */
@@ -343,8 +354,12 @@ button { font: inherit; background: none; border: none; cursor: pointer; padding
 .project-close:hover { color: var(--gray); }
 
 @media (max-width: 640px) {
-  .project-info { grid-template-columns: var(--table-cols-sm); }
-  .project-info .table-cell:nth-child(4) { display: none; }
+  .project-info {
+    grid-template-columns: var(--table-cols-sm);
+    font-size: 11px;
+    letter-spacing: 0.04em;
+    padding-right: 34px;
+  }
 }
 
 /* Slideshow: photo centred on the page, same margin below the top
@@ -417,8 +432,12 @@ button { font: inherit; background: none; border: none; cursor: pointer; padding
 }
 
 @media (max-width: 640px) {
-  .project-intro { grid-template-columns: var(--table-cols-sm); }
-  .project-intro .table-cell:nth-child(4) { display: none; }
+  .project-intro {
+    grid-template-columns: var(--table-cols-sm);
+    font-size: 11px;
+    letter-spacing: 0.04em;
+    padding-right: 34px;
+  }
 }
 
 body.intro-hold .project-intro,
@@ -610,7 +629,13 @@ body.intro-rise .project-info { opacity: 0; }
 
 /* ===== RESPONSIVE ===== */
 @media (max-width: 640px) {
-  .filter-panel-inner { grid-template-columns: 1fr; gap: 16px; }
+  /* Filter keeps the three-column layout of the site, smaller type */
+  .filter-panel-inner {
+    grid-template-columns: repeat(3, 1fr);
+    gap: 10px;
+    font-size: 11px;
+    letter-spacing: 0.04em;
+  }
   .fg-format, .fg-location, .fg-year { grid-column: auto; grid-row: auto; }
   .project-description { max-width: 70vw; }
 }
