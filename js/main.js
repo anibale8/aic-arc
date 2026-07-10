@@ -119,13 +119,17 @@ function initIndex() {
     if (projLabel) projLabel.addEventListener('click', closeFilterIfOpen);
   }
 
-  /* Moving to another section with the filter open: clear all + close it */
+  /* Moving to another section: close the panel if open and clear any
+     active filters, whether the panel was open or not */
   function closeFilterIfOpen() {
     const panel = document.getElementById('filter-panel');
-    if (!panel.classList.contains('open')) return;
-    panel.classList.remove('open');
-    document.getElementById('filter-toggle').classList.remove('active');
-    clearFilters();
+    if (panel.classList.contains('open')) {
+      panel.classList.remove('open');
+      document.getElementById('filter-toggle').classList.remove('active');
+    }
+    const total = activeFilters.year.length + activeFilters.location.length + activeFilters.format.length;
+    if (total > 0) clearFilters();
+    updateClearBtn();
   }
 
   function setView(view) {
