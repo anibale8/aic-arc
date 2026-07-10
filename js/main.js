@@ -267,6 +267,8 @@ function initIndex() {
       updateClearBtn();
     });
     document.getElementById('clear-filters').addEventListener('click', clearFilters);
+    const clearMobile = document.getElementById('clear-filters-mobile');
+    if (clearMobile) clearMobile.addEventListener('click', clearFilters);
   }
 
   /* "Clear all" (next to Filter) shows while the panel is open
