@@ -321,6 +321,10 @@ function initIndex() {
       item.classList.toggle('hidden', !matchesFilters(item));
     });
     syncMapMarkers();
+
+    // Nothing matches: say so instead of showing an empty page
+    const anyMatch = projects.some(matchesProject);
+    document.getElementById('no-results').style.display = anyMatch ? 'none' : 'block';
   }
 
   function matchesFilters(item) {
