@@ -113,8 +113,8 @@ function initIndex() {
   function bindViewToggle() {
     document.getElementById('btn-images').addEventListener('click', () => setView('images'));
     document.getElementById('btn-table').addEventListener('click',  () => setView('table'));
-    document.getElementById('btn-map').addEventListener('click',    () => setView('map'));
-    // Opening the Projects dropdown also clears and closes the filter
+    document.getElementById('btn-map').addEventListener('click',    () => { closeFilterIfOpen(); setView('map'); });
+    // Clicking "Projects" (not Image/Text) clears and closes the filter
     const projLabel = document.querySelector('.nav-projects .nav-label');
     if (projLabel) projLabel.addEventListener('click', closeFilterIfOpen);
   }
@@ -129,7 +129,6 @@ function initIndex() {
   }
 
   function setView(view) {
-    closeFilterIfOpen();
     const table    = document.getElementById('projects-table');
     const strip    = document.getElementById('projects-strip');
     const mapEl    = document.getElementById('projects-map');
