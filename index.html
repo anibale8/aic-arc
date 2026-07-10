@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>aic.arc</title>
+  <meta name="description" content="Architecture and photography — Site visits 2018–2024">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css">
+  <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+  <link rel="stylesheet" href="css/style.css?v=36">
+</head>
+<body>
+
+  <!-- HEADER (same line on every page) -->
+  <header class="header" id="header">
+    <nav class="header-nav">
+      <div class="nav-projects">
+        <span class="nav-label">Projects</span>
+        <div class="nav-dropdown">
+          <button class="nav-link" id="btn-images">Image</button>
+          <button class="nav-link active" id="btn-table">Text</button>
+        </div>
+      </div>
+      <span class="header-filter-group">
+        <button class="nav-link" id="filter-toggle">Filter<span class="filter-count" id="filter-count" style="display:none">0</span></button>
+        <button class="clear-filters" id="clear-filters">Clear all</button>
+      </span>
+      <button class="nav-link nav-map" id="btn-map">Map</button>
+      <a class="nav-link nav-about" href="about.html">About</a>
+    </nav>
+  </header>
+
+  <!-- FILTER PANEL -->
+  <div class="filter-panel" id="filter-panel">
+    <div class="filter-panel-inner">
+      <div class="filter-group fg-format">
+        <div class="filter-group-label">Format</div>
+        <div class="filter-options" id="filter-formats"></div>
+      </div>
+      <div class="filter-group fg-location">
+        <div class="filter-group-label">Location</div>
+        <div class="filter-options" id="filter-locations"></div>
+      </div>
+      <div class="filter-group fg-year">
+        <div class="filter-group-label">Year</div>
+        <div class="filter-options" id="filter-years"></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- MAIN CONTENT -->
+  <main>
+    <!-- Text view (table) — default -->
+    <div class="projects-table" id="projects-table">
+      <div class="table-header" id="table-header">
+        <span class="table-cell">No</span>
+        <span class="table-cell">Project</span>
+        <span class="table-cell">Format</span>
+        <span class="table-cell">Location</span>
+        <span class="table-cell">Year</span>
+      </div>
+      <div id="table-rows"></div>
+    </div>
+
+    <!-- Image view (grid) -->
+    <div class="projects-strip" id="projects-strip"></div>
+
+    <!-- Map view -->
+    <div class="projects-map" id="projects-map"></div>
+  </main>
+
+  <!-- PROJECT WINDOW over the map (browse photos without leaving the map) -->
+  <div class="map-modal" id="map-modal">
+    <div class="map-modal-top">
+      <div class="map-modal-info" id="map-modal-info"></div>
+      <button class="map-modal-close" id="map-modal-close" aria-label="Close">×</button>
+    </div>
+    <div class="map-modal-stage">
+      <button class="stage-zone" id="map-modal-prev" aria-label="Previous image"></button>
+      <button class="stage-zone" id="map-modal-next" aria-label="Next image"></button>
+      <img id="map-modal-photo" src="" alt="">
+      <span class="map-modal-counter" id="map-modal-counter"></span>
+    </div>
+  </div>
+
+  <script src="js/projects.js?v=36"></script>
+  <script src="js/main.js?v=36"></script>
+</body>
+</html>

@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>aic.arc</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="css/style.css?v=36">
+</head>
+<body class="no-scroll">
+
+  <!-- TOP LINE: the project info itself, with a closing cross -->
+  <div class="project-info" id="project-info"></div>
+  <a class="project-close" id="project-close" href="index.html" aria-label="Close">✕</a>
+
+  <!-- INTRO: project info centred for 2s on each project change -->
+  <div class="project-intro" id="project-intro"></div>
+
+  <!-- SLIDESHOW: one photo, click left/right to navigate -->
+  <div class="project-stage" id="project-stage">
+    <button class="stage-zone" id="stage-prev" aria-label="Previous image"></button>
+    <button class="stage-zone" id="stage-next" aria-label="Next image"></button>
+    <img id="project-photo" src="" alt="">
+  </div>
+
+  <!-- FOOTER: counter + description toggle -->
+  <div class="project-footer">
+    <span class="project-counter" id="project-counter"></span>
+    <button class="description-toggle" id="description-toggle" aria-label="Project description">+</button>
+  </div>
+  <div class="project-description" id="project-description"></div>
+
+  <script src="js/projects.js?v=36"></script>
+  <script src="js/main.js?v=36"></script>
+</body>
+</html>

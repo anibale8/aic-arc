@@ -1,0 +1,599 @@
+/* ===== BASE ===== */
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+:root {
+  --black: #000;
+  --white: #fff;
+  --gray: #8a8a8a;
+  --gap: 4px;
+  --header-h: 40px;
+  /* One shared margin so content aligns with the top menu */
+  --pad-x: 12px;
+  --pad-head: 12px;
+  /* Shared column grid for nav, table and project info line */
+  --table-cols: 3.5rem 1.15fr 1.3fr 1.3fr 1fr;
+  --table-cols-sm: 2.5rem 2fr 1fr 3.5rem;
+  --font: 'Montserrat', 'Helvetica Neue', Arial, sans-serif;
+  --transition: 0.15s ease;
+}
+
+html {
+  font-family: var(--font);
+  font-size: 15px;
+  font-weight: 300; /* Montserrat Light */
+  letter-spacing: 0.06em;
+  color: var(--black);
+  background: var(--white);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  line-height: 1.35;
+}
+
+body { background: var(--white); }
+body.no-scroll { overflow: hidden; height: 100vh; }
+a { color: inherit; text-decoration: none; }
+img { display: block; max-width: 100%; height: auto; }
+button { font: inherit; background: none; border: none; cursor: pointer; padding: 0; color: inherit; }
+
+/* ===== HEADER (same line on every page) =====
+   Nav items sit on the same grid as the table columns:
+   Projects -> No/Project, Filter -> Format, About -> Year */
+.header {
+  position: sticky;
+  top: 0;
+  width: 100%;
+  height: var(--header-h);
+  padding: 0 var(--pad-head);
+  display: flex;
+  align-items: center;
+  background: var(--white);
+  /* Above Leaflet's panes (~700) and the map window (1000) so the
+     Projects dropdown always overlays the map and stays readable */
+  z-index: 1100;
+}
+
+.header-nav {
+  width: 100%;
+  display: grid;
+  grid-template-columns: var(--table-cols);
+  gap: var(--gap);
+  align-items: center;
+  /* Nav labels are controls: never text-selectable (blue highlight) */
+  user-select: none;
+  -webkit-user-select: none;
+}
+
+.nav-projects {
+  grid-column: 1 / 3;
+  position: relative;
+  justify-self: start;
+  /* Fills the header height so the hover reaches the dropdown band */
+  height: var(--header-h);
+  display: flex;
+  align-items: center;
+}
+
+.nav-label { color: var(--black); cursor: default; }
+
+/* Dropdown shown on hover over "Projects" */
+/* One white band across the whole page width, holding both options */
+.nav-dropdown {
+  display: none;
+  position: fixed;
+  top: var(--header-h);
+  left: 0;
+  right: 0;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 2px;
+  background: var(--white);
+  padding: 6px var(--pad-head) 12px;
+  z-index: 1001; /* above the map and its window */
+}
+
+.nav-projects:hover .nav-dropdown { display: flex; }
+
+/* Dropdown items: solid black; hovering lightens the word you are
+   about to pick; a dot marks the view/page you are on */
+.nav-dropdown .nav-link { color: var(--black); }
+.nav-dropdown .nav-link:hover { color: var(--gray); }
+
+.nav-link.active::after {
+  content: '●';
+  font-size: 7px;
+  margin-left: 8px;
+}
+
+.nav-map   { grid-column: 4; justify-self: start; }
+.nav-about { grid-column: 5; justify-self: start; }
+
+/* Menu items keep one constant tone — no lighter resting state */
+.nav-link {
+  color: var(--black);
+  transition: color var(--transition);
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.nav-link.active { color: var(--black); }
+
+@media (max-width: 640px) {
+  .header-nav { grid-template-columns: var(--table-cols-sm); }
+  .nav-about  { grid-column: 4; }
+}
+
+.filter-count {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 14px;
+  height: 14px;
+  background: var(--black);
+  color: var(--white);
+  font-size: 10px;
+  padding: 0 3px;
+}
+
+/* ===== FILTER PANEL ===== */
+.filter-panel {
+  position: sticky;
+  top: var(--header-h);
+  background: var(--white);
+  z-index: 1050; /* also above the map */
+  display: none;
+}
+
+.filter-panel.open { display: block; }
+
+/* Each filter group sits under its table column:
+   Format -> col 3, Location -> col 4, Year -> col 5 */
+.filter-panel-inner {
+  padding: 8px var(--pad-x) 16px;
+  display: grid;
+  grid-template-columns: var(--table-cols);
+  gap: var(--gap);
+}
+
+.fg-format   { grid-column: 3; grid-row: 1; }
+.fg-location { grid-column: 4; grid-row: 1; }
+.fg-year     { grid-column: 5; grid-row: 1; }
+
+.filter-group-label {
+  color: var(--gray);
+  margin-bottom: 6px;
+}
+
+/* Options stack vertically under each group label */
+.filter-options {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 2px;
+}
+
+.filter-option {
+  transition: color var(--transition);
+  color: var(--black);
+}
+
+.filter-option:hover  { color: var(--gray); }
+.filter-option.active { text-decoration: underline; }
+
+/* "Clear all" lives in the header, next to Filter */
+.header-filter-group {
+  grid-column: 3;
+  justify-self: start;
+  display: flex;
+  align-items: center;
+  gap: 20px;
+}
+
+.clear-filters {
+  display: none;
+  color: var(--gray);
+  transition: color var(--transition);
+}
+
+.clear-filters.visible { display: inline-flex; }
+.clear-filters:hover { color: var(--black); }
+
+/* ===== TEXT VIEW (table, main view) ===== */
+.projects-table {
+  padding: 90px 0 48px;
+}
+
+.table-header,
+.table-row {
+  display: grid;
+  grid-template-columns: var(--table-cols);
+  gap: var(--gap);
+  padding: 7px var(--pad-x);
+  color: var(--black);
+}
+
+.table-header {
+  margin-bottom: 44px;
+  font-weight: 400; /* regular, not light */
+}
+
+.table-row { transition: color var(--transition); }
+.table-row:hover { color: var(--gray); }
+.table-row.hidden { display: none; }
+
+.table-cell {
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+@media (max-width: 640px) {
+  .projects-table { padding-top: 120px; }
+  .table-header,
+  .table-row { grid-template-columns: var(--table-cols-sm); }
+  .table-header .table-cell:nth-child(4),
+  .table-row .table-cell:nth-child(4) { display: none; }
+}
+
+/* ===== IMAGE VIEW (grid: photos only, label on hover) ===== */
+.projects-strip {
+  display: none;
+  /* Photos start at the same height as the Text view */
+  padding: 90px var(--pad-x) 48px;
+}
+
+.projects-strip.active {
+  display: grid;
+  grid-template-columns: repeat(5, 1fr);
+  /* Gap between projects equals the page side margins */
+  column-gap: var(--pad-x);
+  row-gap: 170px;
+}
+
+.strip-item {
+  position: relative;
+  display: block;
+}
+
+.strip-item.hidden { display: none; }
+
+/* Code + project name, above the image, only visible on hover */
+.strip-item-label {
+  position: absolute;
+  bottom: 100%;
+  left: 0;
+  padding-bottom: 8px;
+  white-space: nowrap;
+  color: var(--black);
+  opacity: 0;
+  transition: opacity var(--transition);
+}
+
+.strip-item:hover .strip-item-label { opacity: 1; }
+
+/* Every cover shares the same portrait format (2:3, like 001) */
+.strip-item-img {
+  width: 100%;
+  aspect-ratio: 2 / 3;
+  overflow: hidden;
+  background: #f0f0f0;
+}
+
+.strip-item-img img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+@media (max-width: 640px) {
+  .projects-strip { padding-top: 120px; }
+  .projects-strip.active {
+    grid-template-columns: repeat(2, 1fr);
+    row-gap: 80px;
+  }
+}
+
+/* ===== PROJECT PAGE ===== */
+/* The project info IS the top line of the page (no menu here) */
+.project-info {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: var(--header-h);
+  z-index: 25;
+  background: var(--white);
+  display: grid;
+  grid-template-columns: var(--table-cols);
+  gap: var(--gap);
+  align-items: center;
+  padding: 0 40px 0 var(--pad-head); /* right side leaves room for the ✕ */
+}
+
+/* Close cross at the right: back to Image or Text, wherever you came from */
+.project-close {
+  position: fixed;
+  top: 0;
+  right: var(--pad-head);
+  height: var(--header-h);
+  display: flex;
+  align-items: center;
+  z-index: 26;
+  /* Text-sized, bold */
+  font-size: 15px;
+  font-weight: 700;
+  transition: color var(--transition);
+}
+
+.project-close:hover { color: var(--gray); }
+
+@media (max-width: 640px) {
+  .project-info { grid-template-columns: var(--table-cols-sm); }
+  .project-info .table-cell:nth-child(4) { display: none; }
+}
+
+/* Slideshow: photo centred on the page, same margin below the top
+   line as above the bottom line */
+.project-stage {
+  position: relative;
+  margin-top: var(--header-h);
+  height: calc(100vh - 2 * var(--header-h));
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 28px var(--pad-x);
+}
+
+.project-stage img {
+  max-width: 100%;
+  max-height: 100%;
+  width: auto;
+  height: auto;
+  transition: filter 0.6s ease, opacity 0.6s ease;
+}
+
+/* Fast repeated clicks must never select or drag the photo (blue highlight) */
+.project-stage,
+.project-info,
+.project-intro,
+.project-footer {
+  user-select: none;
+  -webkit-user-select: none;
+}
+
+.project-stage img {
+  -webkit-user-drag: none;
+  user-drag: none;
+}
+
+/* Invisible click zones: left half = previous, right half = next.
+   The cursor must not change over the photo */
+.stage-zone {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  width: 50%;
+  z-index: 5;
+  cursor: default;
+}
+
+#stage-prev { left: 0; }
+#stage-next { right: 0; }
+
+/* ── Project intro: info centred over the blurred photo for 2s,
+     then rises to the persistent line position ── */
+.project-intro {
+  position: fixed;
+  left: 0;
+  right: 0;
+  top: 50%;
+  transform: translateY(-50%);
+  height: var(--header-h);
+  align-items: center;
+  z-index: 28;
+  display: grid;
+  grid-template-columns: var(--table-cols);
+  gap: var(--gap);
+  padding: 0 40px 0 var(--pad-head);
+  background: transparent;
+  opacity: 0;
+  pointer-events: none;
+  transition: top 0.6s ease, transform 0.6s ease;
+}
+
+@media (max-width: 640px) {
+  .project-intro { grid-template-columns: var(--table-cols-sm); }
+  .project-intro .table-cell:nth-child(4) { display: none; }
+}
+
+body.intro-hold .project-intro,
+body.intro-rise .project-intro { opacity: 1; }
+
+body.intro-rise .project-intro {
+  top: 0;
+  transform: translateY(0);
+}
+
+/* Heavy blur + fade so the centred text always reads clearly */
+body.intro-hold #project-photo {
+  filter: blur(45px);
+  opacity: 0.35;
+}
+
+/* Every click on the page is disabled while the intro is on screen */
+body.intro-hold,
+body.intro-rise { pointer-events: none; }
+
+body.intro-hold .project-info,
+body.intro-rise .project-info { opacity: 0; }
+
+.project-info { transition: opacity 0.2s ease; }
+
+.project-footer {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  height: 44px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 var(--pad-x);
+  background: var(--white);
+  z-index: 26;
+}
+
+.project-counter { color: var(--gray); }
+
+/* The + sits under the ✕, level with the page counter */
+.description-toggle {
+  position: fixed;
+  right: var(--pad-head);
+  bottom: 11px;
+  z-index: 27;
+  font-size: 22px;
+  font-weight: 400;
+  line-height: 1;
+  transition: color var(--transition);
+}
+
+.description-toggle:hover { color: var(--gray); }
+
+.project-description {
+  display: none;
+  position: fixed;
+  bottom: 44px;
+  right: var(--pad-x);
+  /* Narrow column so it stays on the white band, off the photo */
+  max-width: 200px;
+  background: var(--white);
+  padding: 16px;
+  z-index: 27;
+  line-height: 1.6;
+  font-size: 11px;
+}
+
+.project-description.open { display: block; }
+
+/* ===== ABOUT PAGE ===== */
+.info-page {
+  /* Clears the Projects dropdown when it opens over the page */
+  padding: 100px var(--pad-x) 24px;
+  max-width: 560px;
+}
+
+.info-page h1 {
+  font-size: 15px;
+  margin-bottom: 16px;
+}
+
+.info-page p {
+  line-height: 1.5;
+  margin-bottom: 12px;
+}
+
+.info-page a { text-decoration: underline; transition: color var(--transition); }
+.info-page a:hover { color: var(--gray); }
+
+/* ===== MAP VIEW ===== */
+.projects-map {
+  display: none;
+  height: calc(100vh - var(--header-h));
+  background: #f2f2f2;
+}
+
+.projects-map.active { display: block; }
+
+/* Marker: the project's cover photo pinned at its location */
+.map-marker { background: none; border: none; }
+
+.map-marker img {
+  width: 56px;
+  height: 56px;
+  object-fit: cover;
+  border: 2px solid var(--white);
+  box-shadow: 0 0 0 1px #bbb;
+  cursor: pointer;
+  display: block;
+}
+
+.map-marker:hover img { box-shadow: 0 0 0 1px var(--black); }
+
+/* Project window over the map (no redirect) */
+.map-modal {
+  display: none;
+  position: fixed;
+  top: calc(var(--header-h) + 16px);
+  left: 10%;
+  right: 10%;
+  bottom: 24px;
+  background: var(--white);
+  box-shadow: 0 0 0 1px #ddd, 0 12px 48px rgba(0,0,0,0.18);
+  /* Above Leaflet's internal panes (they go up to ~700) */
+  z-index: 1000;
+  flex-direction: column;
+  user-select: none;
+  -webkit-user-select: none;
+}
+
+.map-modal.open { display: flex; }
+
+.map-modal-top {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 8px 16px;
+}
+
+.map-modal-info { display: flex; gap: 24px; }
+.map-modal-info .gray { color: var(--gray); }
+
+.map-modal-close {
+  font-size: 20px;
+  line-height: 1;
+  transition: color var(--transition);
+}
+
+.map-modal-close:hover { color: var(--gray); }
+
+.map-modal-stage {
+  position: relative;
+  flex: 1;
+  min-height: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  /* Generous margins: plenty of white around the photo */
+  padding: 40px 100px 56px;
+}
+
+.map-modal-stage img {
+  max-width: 100%;
+  max-height: 100%;
+  width: auto;
+  height: auto;
+  -webkit-user-drag: none;
+}
+
+/* Click zones cover the whole window, white side bands included:
+   left half = previous photo, right half = next */
+.map-modal-stage .stage-zone { cursor: default; }
+#map-modal-prev { left: 0; }
+#map-modal-next { right: 0; }
+
+.map-modal-counter {
+  position: absolute;
+  left: 16px;
+  bottom: 10px;
+  color: var(--gray);
+}
+
+@media (max-width: 640px) {
+  .map-modal { left: 4%; right: 4%; }
+}
+
+/* ===== RESPONSIVE ===== */
+@media (max-width: 640px) {
+  .filter-panel-inner { grid-template-columns: 1fr; }
+  .fg-format, .fg-location, .fg-year { grid-column: auto; grid-row: auto; }
+}
