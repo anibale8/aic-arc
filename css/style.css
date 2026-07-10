@@ -101,6 +101,9 @@ a, button {
 .nav-projects:hover .nav-dropdown,
 .nav-dropdown.open { display: flex; }
 
+/* Closed on selection, even while the cursor is still hovering */
+.nav-dropdown.force-closed { display: none !important; }
+
 /* Dropdown items: solid black; hovering lightens the word you are
    about to pick; a dot marks the view/page you are on */
 .nav-dropdown .nav-link { color: var(--black); }
@@ -639,6 +642,15 @@ body.intro-rise .project-info { opacity: 0; }
   .fg-format, .fg-location, .fg-year { grid-column: auto; grid-row: auto; }
   .project-description { max-width: 70vw; }
   .project-counter { font-size: 11px; letter-spacing: 0.04em; }
+  /* Clear all sits at the bottom-left on phones — cleaner header */
+  .clear-filters.visible {
+    position: fixed;
+    left: var(--pad-x);
+    bottom: 12px;
+    z-index: 1060;
+    font-size: 11px;
+    letter-spacing: 0.04em;
+  }
   /* Smaller type: Image view labels, About page, map window */
   .strip-item-label { font-size: 11px; letter-spacing: 0.04em; }
   .info-page { font-size: 12px; }

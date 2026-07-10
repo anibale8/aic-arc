@@ -17,10 +17,21 @@ function bindNavDropdown() {
   if (!proj) return;
   const label = proj.querySelector('.nav-label');
   const drop  = proj.querySelector('.nav-dropdown');
-  label.addEventListener('click', () => drop.classList.toggle('open'));
+  label.addEventListener('click', () => {
+    drop.classList.remove('force-closed');
+    drop.classList.toggle('open');
+  });
   document.addEventListener('click', e => {
     if (!proj.contains(e.target)) drop.classList.remove('open');
   });
+  // Picking Image or Text closes the dropdown right away
+  drop.querySelectorAll('.nav-link').forEach(link => {
+    link.addEventListener('click', () => {
+      drop.classList.remove('open');
+      drop.classList.add('force-closed'); // beats the hover state until the mouse leaves
+    });
+  });
+  proj.addEventListener('mouseleave', () => drop.classList.remove('force-closed'));
 }
 
 /* ══════════════════════════════════════════════
