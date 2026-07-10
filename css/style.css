@@ -91,7 +91,8 @@ button { font: inherit; background: none; border: none; cursor: pointer; padding
   z-index: 1001; /* above the map and its window */
 }
 
-.nav-projects:hover .nav-dropdown { display: flex; }
+.nav-projects:hover .nav-dropdown,
+.nav-dropdown.open { display: flex; }
 
 /* Dropdown items: solid black; hovering lightens the word you are
    about to pick; a dot marks the view/page you are on */
@@ -119,8 +120,13 @@ button { font: inherit; background: none; border: none; cursor: pointer; padding
 .nav-link.active { color: var(--black); }
 
 @media (max-width: 640px) {
-  .header-nav { grid-template-columns: var(--table-cols-sm); }
-  .nav-about  { grid-column: 4; }
+  /* On phones the menu is a simple spaced row */
+  .header-nav {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 10px;
+  }
 }
 
 .filter-count {
@@ -222,13 +228,14 @@ button { font: inherit; background: none; border: none; cursor: pointer; padding
 .table-row.hidden { display: none; }
 
 .table-cell {
+  min-width: 0; /* lets grid tracks shrink below the text's natural width */
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
 }
 
 @media (max-width: 640px) {
-  .projects-table { padding-top: 120px; }
+  .projects-table { padding-top: 70px; }
   .table-header,
   .table-row { grid-template-columns: var(--table-cols-sm); }
   .table-header .table-cell:nth-child(4),
@@ -253,6 +260,7 @@ button { font: inherit; background: none; border: none; cursor: pointer; padding
 .strip-item {
   position: relative;
   display: block;
+  min-width: 0; /* lets grid tracks shrink on narrow screens */
 }
 
 .strip-item.hidden { display: none; }
@@ -286,10 +294,17 @@ button { font: inherit; background: none; border: none; cursor: pointer; padding
 }
 
 @media (max-width: 640px) {
-  .projects-strip { padding-top: 120px; }
+  .projects-strip { padding-top: 70px; }
   .projects-strip.active {
     grid-template-columns: repeat(2, 1fr);
-    row-gap: 80px;
+    row-gap: 32px;
+  }
+  /* No hover on touch: the label is always visible above each cover */
+  .strip-item-label {
+    position: static;
+    opacity: 1;
+    white-space: normal;
+    padding-bottom: 4px;
   }
 }
 
@@ -590,10 +605,20 @@ body.intro-rise .project-info { opacity: 0; }
 
 @media (max-width: 640px) {
   .map-modal { left: 4%; right: 4%; }
+  .map-modal-stage { padding: 20px 16px 44px; }
 }
 
 /* ===== RESPONSIVE ===== */
 @media (max-width: 640px) {
-  .filter-panel-inner { grid-template-columns: 1fr; }
+  .filter-panel-inner { grid-template-columns: 1fr; gap: 16px; }
   .fg-format, .fg-location, .fg-year { grid-column: auto; grid-row: auto; }
+  .project-description { max-width: 70vw; }
+}
+
+/* Mobile browsers: use the dynamic viewport height so the address
+   bar doesn't push content off screen */
+@supports (height: 100dvh) {
+  body.no-scroll { height: 100dvh; }
+  .project-stage { height: calc(100dvh - 2 * var(--header-h)); }
+  .projects-map  { height: calc(100dvh - var(--header-h)); }
 }

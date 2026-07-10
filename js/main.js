@@ -6,9 +6,22 @@ const isProjectPage = document.getElementById('project-stage') !== null;
 const isIndexPage   = document.getElementById('projects-table') !== null;
 
 document.addEventListener('DOMContentLoaded', () => {
+  bindNavDropdown();
   if (isIndexPage)   initIndex();
   if (isProjectPage) initProject();
 });
+
+/* Projects dropdown also works by click/tap (hover doesn't exist on touch) */
+function bindNavDropdown() {
+  const proj = document.querySelector('.nav-projects');
+  if (!proj) return;
+  const label = proj.querySelector('.nav-label');
+  const drop  = proj.querySelector('.nav-dropdown');
+  label.addEventListener('click', () => drop.classList.toggle('open'));
+  document.addEventListener('click', e => {
+    if (!proj.contains(e.target)) drop.classList.remove('open');
+  });
+}
 
 /* ══════════════════════════════════════════════
    INDEX PAGE
