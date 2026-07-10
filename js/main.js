@@ -114,9 +114,22 @@ function initIndex() {
     document.getElementById('btn-images').addEventListener('click', () => setView('images'));
     document.getElementById('btn-table').addEventListener('click',  () => setView('table'));
     document.getElementById('btn-map').addEventListener('click',    () => setView('map'));
+    // Opening the Projects dropdown also clears and closes the filter
+    const projLabel = document.querySelector('.nav-projects .nav-label');
+    if (projLabel) projLabel.addEventListener('click', closeFilterIfOpen);
+  }
+
+  /* Moving to another section with the filter open: clear all + close it */
+  function closeFilterIfOpen() {
+    const panel = document.getElementById('filter-panel');
+    if (!panel.classList.contains('open')) return;
+    panel.classList.remove('open');
+    document.getElementById('filter-toggle').classList.remove('active');
+    clearFilters();
   }
 
   function setView(view) {
+    closeFilterIfOpen();
     const table    = document.getElementById('projects-table');
     const strip    = document.getElementById('projects-strip');
     const mapEl    = document.getElementById('projects-map');
