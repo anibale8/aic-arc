@@ -394,6 +394,12 @@ a, button {
   transition: filter 0.6s ease, opacity 0.6s ease;
 }
 
+/* Soft fade while a slideshow photo is being swapped */
+#project-photo,
+#map-modal-photo { transition: filter 0.6s ease, opacity 0.15s ease; }
+
+.photo-fading { opacity: 0 !important; }
+
 /* Fast repeated clicks must never select or drag the photo (blue highlight) */
 .project-stage,
 .project-info,

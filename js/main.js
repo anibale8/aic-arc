@@ -11,6 +11,16 @@ document.addEventListener('DOMContentLoaded', () => {
   if (isProjectPage) initProject();
 });
 
+/* Soft fade when swapping a slideshow photo */
+function fadeSwap(imgEl, url) {
+  if (imgEl.src === url) return;
+  imgEl.classList.add('photo-fading');
+  setTimeout(() => {
+    imgEl.onload = () => imgEl.classList.remove('photo-fading');
+    imgEl.src = url;
+  }, 150);
+}
+
 /* Projects dropdown also works by click/tap (hover doesn't exist on touch) */
 function bindNavDropdown() {
   const proj = document.querySelector('.nav-projects');
@@ -194,13 +204,19 @@ function initIndex() {
         }).addTo(map);
       });
 
+    // Projects sharing the same spot are placed side by side in
+    // screen pixels, so they never overlap at any zoom level
+    const atSpot = {};
     projects.forEach(p => {
       if (!p.coords) return;
+      const key = p.coords.join(',');
+      const nth = atSpot[key] || 0;
+      atSpot[key] = nth + 1;
       const icon = L.divIcon({
         className: 'map-marker',
         html: `<img src="${p.cover}" alt="${p.title}">`,
         iconSize: [56, 56],
-        iconAnchor: [28, 28]
+        iconAnchor: [28 - nth * 62, 28]
       });
       const marker = L.marker(p.coords, { icon }).on('click', () => openMapProject(p));
       mapMarkers.push({ p, marker });
@@ -240,7 +256,7 @@ function initIndex() {
     const n = mapProject.images.length;
     mapPhoto = (i + n) % n;
     const img = document.getElementById('map-modal-photo');
-    img.src = mapProject.images[mapPhoto].url;
+    fadeSwap(img, mapProject.images[mapPhoto].url);
     img.alt = `${mapProject.title} — ${mapPhoto + 1}`;
     document.getElementById('map-modal-counter').textContent = `${mapPhoto + 1}/${n}`;
   }
@@ -396,7 +412,7 @@ function initProject() {
   function show(i) {
     const p = projects[pIdx];
     current = i;
-    img.src = p.images[current].url;
+    fadeSwap(img, p.images[current].url);
     img.alt = `${p.title} — ${current + 1}`;
     counter.textContent = `${current + 1}/${p.images.length}`;
     descEl.innerHTML = `<p>${p.description || ''}</p>`;
