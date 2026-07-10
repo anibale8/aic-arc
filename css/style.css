@@ -127,12 +127,12 @@ a, button {
 .nav-link.active { color: var(--black); }
 
 @media (max-width: 640px) {
-  /* On phones the menu is a simple spaced row */
+  /* The menu follows the same column grid and type size as the table:
+     Projects/Filter/Map/About keep the table columns' separation */
   .header-nav {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    gap: 10px;
+    grid-template-columns: var(--table-cols-sm);
+    font-size: 11px;
+    letter-spacing: 0.04em;
   }
 }
 
@@ -638,6 +638,7 @@ body.intro-rise .project-info { opacity: 0; }
   }
   .fg-format, .fg-location, .fg-year { grid-column: auto; grid-row: auto; }
   .project-description { max-width: 70vw; }
+  .project-counter { font-size: 11px; letter-spacing: 0.04em; }
 }
 
 /* Mobile browsers: use the dynamic viewport height so the address
