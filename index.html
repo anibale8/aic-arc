@@ -10,7 +10,7 @@
   <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css">
   <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
-  <link rel="stylesheet" href="css/style.css?v=48">
+  <link rel="stylesheet" href="css/style.css?v=49">
 </head>
 <body>
 
@@ -65,16 +65,16 @@
         <span class="table-cell">Year</span>
       </div>
       <div id="table-rows"></div>
+      <div class="no-results">No projects match the selected filters.</div>
     </div>
 
     <!-- Image view (grid) -->
     <div class="projects-strip" id="projects-strip"></div>
 
     <!-- Map view -->
-    <div class="projects-map" id="projects-map"></div>
-
-    <!-- Shown when the filter combination matches nothing -->
-    <div class="no-results" id="no-results">No projects match the selected filters.</div>
+    <div class="projects-map" id="projects-map">
+      <div class="no-results no-results-map">No projects match the selected filters.</div>
+    </div>
   </main>
 
   <!-- PROJECT WINDOW over the map (browse photos without leaving the map) -->
@@ -91,7 +91,7 @@
     </div>
   </div>
 
-  <script src="js/projects.js?v=48"></script>
-  <script src="js/main.js?v=48"></script>
+  <script src="js/projects.js?v=49"></script>
+  <script src="js/main.js?v=49"></script>
 </body>
 </html>

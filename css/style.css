@@ -541,15 +541,24 @@ body.intro-rise .project-info { opacity: 0; }
 .info-page a { text-decoration: underline; transition: color var(--transition); }
 .info-page a:hover { color: var(--gray); }
 
-/* Message when no project survives the active filters */
+/* Message when no project survives the active filters.
+   Lives inside each view, so it shows below the column headers */
 .no-results {
   display: none;
-  position: fixed;
-  top: 200px;
+  color: var(--gray);
+}
+
+body.no-matches .no-results { display: block; }
+
+.projects-table .no-results { padding: 24px var(--pad-x) 0; }
+.projects-strip .no-results { grid-column: 1 / -1; }
+
+.no-results-map {
+  position: absolute;
+  top: 16px;
   left: var(--pad-x);
   right: var(--pad-x);
-  color: var(--gray);
-  z-index: 900; /* above the map, below header and windows */
+  z-index: 900; /* above the map tiles */
 }
 
 /* ===== MAP VIEW ===== */
@@ -662,7 +671,7 @@ body.intro-rise .project-info { opacity: 0; }
   .fg-format, .fg-location, .fg-year { grid-column: auto; grid-row: auto; }
   .project-description { max-width: 70vw; }
   .project-counter { font-size: 11px; letter-spacing: 0.04em; }
-  .no-results { top: 155px; font-size: 11px; letter-spacing: 0.04em; }
+  .no-results { font-size: 11px; letter-spacing: 0.04em; }
   /* Clear all lives under the Format group on phones — cleaner header */
   .header-filter-group .clear-filters { display: none !important; }
   .clear-filters-panel {

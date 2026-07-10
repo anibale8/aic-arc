@@ -107,6 +107,8 @@ function initIndex() {
         <div class="strip-item-img"><img src="${p.cover}" alt="${p.title}" loading="lazy"></div>`;
       strip.appendChild(item);
     });
+    strip.insertAdjacentHTML('beforeend',
+      '<div class="no-results">No projects match the selected filters.</div>');
   }
 
   /* ── View toggle ────────────────────────── */
@@ -329,8 +331,7 @@ function initIndex() {
     syncMapMarkers();
 
     // Nothing matches: say so instead of showing an empty page
-    const anyMatch = projects.some(matchesProject);
-    document.getElementById('no-results').style.display = anyMatch ? 'none' : 'block';
+    document.body.classList.toggle('no-matches', !projects.some(matchesProject));
   }
 
   function matchesFilters(item) {
@@ -399,11 +400,6 @@ function initProject() {
     img.alt = `${p.title} — ${current + 1}`;
     counter.textContent = `${current + 1}/${p.images.length}`;
     descEl.innerHTML = `<p>${p.description || ''}</p>`;
-    // Preload the neighbouring photos so switching feels instant
-    [current + 1, current - 1].forEach(i => {
-      const n = (i + p.images.length) % p.images.length;
-      new Image().src = p.images[n].url;
-    });
   }
 
   /* Project info centred over the blurred photo for 2s,
@@ -434,6 +430,8 @@ function initProject() {
     plusBtn.style.display = p.description ? '' : 'none';
     show(startAtLast ? p.images.length - 1 : 0);
     playIntro();
+    // Preload every photo of the project so browsing feels instant
+    p.images.forEach(im => { new Image().src = im.url; });
   }
 
   /* Navigation is locked while the intro is on screen */
