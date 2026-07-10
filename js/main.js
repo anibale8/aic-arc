@@ -11,16 +11,6 @@ document.addEventListener('DOMContentLoaded', () => {
   if (isProjectPage) initProject();
 });
 
-/* Soft fade when swapping a slideshow photo */
-function fadeSwap(imgEl, url) {
-  if (imgEl.src === url) return;
-  imgEl.classList.add('photo-fading');
-  setTimeout(() => {
-    imgEl.onload = () => imgEl.classList.remove('photo-fading');
-    imgEl.src = url;
-  }, 150);
-}
-
 /* Projects dropdown also works by click/tap (hover doesn't exist on touch) */
 function bindNavDropdown() {
   const proj = document.querySelector('.nav-projects');
@@ -256,7 +246,7 @@ function initIndex() {
     const n = mapProject.images.length;
     mapPhoto = (i + n) % n;
     const img = document.getElementById('map-modal-photo');
-    fadeSwap(img, mapProject.images[mapPhoto].url);
+    img.src = mapProject.images[mapPhoto].url;
     img.alt = `${mapProject.title} — ${mapPhoto + 1}`;
     document.getElementById('map-modal-counter').textContent = `${mapPhoto + 1}/${n}`;
   }
@@ -412,7 +402,7 @@ function initProject() {
   function show(i) {
     const p = projects[pIdx];
     current = i;
-    fadeSwap(img, p.images[current].url);
+    img.src = p.images[current].url;
     img.alt = `${p.title} — ${current + 1}`;
     counter.textContent = `${current + 1}/${p.images.length}`;
     descEl.innerHTML = `<p>${p.description || ''}</p>`;
