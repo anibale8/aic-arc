@@ -5,6 +5,24 @@
 const isProjectPage = document.getElementById('project-stage') !== null;
 const isIndexPage   = document.getElementById('projects-table') !== null;
 
+/* ── GoatCounter ──
+   The site is three HTML files, so the paths shown in the analytics
+   panel are built by hand: /project/<slug> for each project and
+   /#image, /#text, /#map for the index views (see track() calls). */
+const initialHash = window.location.hash; // initIndex drops the hash before the counter may read it
+
+window.goatcounter = {
+  path: () => {
+    const slug = new URLSearchParams(window.location.search).get('slug');
+    if (isProjectPage && slug) return '/project/' + slug;
+    return window.location.pathname.replace(/index\.html$/, '') + initialHash;
+  }
+};
+
+function track(path) {
+  if (window.goatcounter.count) window.goatcounter.count({ path });
+}
+
 document.addEventListener('DOMContentLoaded', () => {
   bindNavDropdown();
   if (isIndexPage)   initIndex();
@@ -120,9 +138,9 @@ function initIndex() {
 
   /* ── View toggle ────────────────────────── */
   function bindViewToggle() {
-    document.getElementById('btn-images').addEventListener('click', () => setView('images'));
-    document.getElementById('btn-table').addEventListener('click',  () => setView('table'));
-    document.getElementById('btn-map').addEventListener('click',    () => setView('map'));
+    document.getElementById('btn-images').addEventListener('click', () => { setView('images'); track('/#image'); });
+    document.getElementById('btn-table').addEventListener('click',  () => { setView('table');  track('/#text'); });
+    document.getElementById('btn-map').addEventListener('click',    () => { setView('map');    track('/#map'); });
     // Clicking "Projects" also clears and closes the filter
     const projLabel = document.querySelector('.nav-projects .nav-label');
     if (projLabel) projLabel.addEventListener('click', closeFilterIfOpen);
@@ -236,6 +254,7 @@ function initIndex() {
   /* Project window over the map: browse the photos, close, keep navigating */
   function openMapProject(p) {
     mapProject = p;
+    track('/project/' + p.slug);
     document.getElementById('map-modal-info').innerHTML = `
       <span>${p.code}</span>
       <span>${p.title}</span>`;
@@ -401,6 +420,7 @@ function initProject() {
   const descEl  = document.getElementById('project-description');
   let current = 0;
   let introT1 = null, introT2 = null;
+  let firstProject = true; // the first project is already counted as the page load itself
 
   function infoCells(p) {
     return `
@@ -441,6 +461,8 @@ function initProject() {
     const p = projects[pIdx];
     document.title = `fre.flier — ${p.title}`;
     history.replaceState(null, '', `project.html?slug=${p.slug}${from ? `&from=${from}` : ''}`);
+    if (!firstProject) track('/project/' + p.slug);
+    firstProject = false;
     infoEl.innerHTML  = infoCells(p);
     introEl.innerHTML = infoCells(p);
     // Close the description panel when switching projects;
