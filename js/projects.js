@@ -69,7 +69,7 @@ const projects = [
     architect: "RCR Arquitectes",
     format: "Architecture",
     coords: [42.1817, 2.489], // Olot, Girona
-    description: "Les Cols Restaurant by RCR Arquitectes\n\nRestaurant Les Cols, Olot, Spain.",
+    description: "Les Cols Carp by RCR Arquitectes\n\nRestaurant Les Cols, Olot, Spain.",
     cover: "projects/003_LES COLS_2025/01_LES COLS.webp",
     thumb: "projects/003_LES COLS_2025/01_LES COLS_thumb.webp",
     images: [
