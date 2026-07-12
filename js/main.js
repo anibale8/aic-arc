@@ -17,18 +17,25 @@ function bindNavDropdown() {
   if (!proj) return;
   const label = proj.querySelector('.nav-label');
   const drop  = proj.querySelector('.nav-dropdown');
+  const syncExpanded = () =>
+    label.setAttribute('aria-expanded', drop.classList.contains('open'));
   label.addEventListener('click', () => {
     drop.classList.remove('force-closed');
     drop.classList.toggle('open');
+    syncExpanded();
   });
   document.addEventListener('click', e => {
-    if (!proj.contains(e.target)) drop.classList.remove('open');
+    if (!proj.contains(e.target)) {
+      drop.classList.remove('open');
+      syncExpanded();
+    }
   });
   // Picking Image or Text closes the dropdown right away
   drop.querySelectorAll('.nav-link').forEach(link => {
     link.addEventListener('click', () => {
       drop.classList.remove('open');
       drop.classList.add('force-closed'); // beats the hover state until the mouse leaves
+      syncExpanded();
     });
   });
   proj.addEventListener('mouseleave', () => drop.classList.remove('force-closed'));
@@ -173,7 +180,7 @@ function initIndex() {
 
     // Plain single-tone landmass, no country borders: countries drawn
     // with the same fill and stroke colour so no lines show
-    fetch('https://cdn.jsdelivr.net/gh/johan/world.geo.json@master/countries.geo.json')
+    fetch('data/countries.geo.json')
       .then(r => r.json())
       .then(geo => {
         L.geoJSON(geo, {
@@ -204,7 +211,7 @@ function initIndex() {
       atSpot[key] = nth + 1;
       const icon = L.divIcon({
         className: 'map-marker',
-        html: `<img src="${p.cover}" alt="${p.title}">`,
+        html: `<img src="${p.thumb}" alt="${p.title}">`,
         iconSize: [56, 56],
         iconAnchor: [28 - nth * 62, 28]
       });
@@ -279,6 +286,7 @@ function initIndex() {
       const btn = document.createElement('button');
       btn.className = 'filter-option';
       btn.textContent = val;
+      btn.setAttribute('aria-pressed', 'false');
       btn.addEventListener('click', () => toggleFilter(type, val, btn));
       el.appendChild(btn);
     });
@@ -315,12 +323,16 @@ function initIndex() {
       arr.splice(idx, 1);
       btn.classList.remove('active');
     }
+    btn.setAttribute('aria-pressed', btn.classList.contains('active'));
     applyFilters();
   }
 
   function clearFilters() {
     activeFilters = { year: [], location: [], format: [] };
-    document.querySelectorAll('.filter-option').forEach(b => b.classList.remove('active'));
+    document.querySelectorAll('.filter-option').forEach(b => {
+      b.classList.remove('active');
+      b.setAttribute('aria-pressed', 'false');
+    });
     applyFilters();
   }
 
@@ -405,7 +417,9 @@ function initProject() {
     img.src = p.images[current].url;
     img.alt = `${p.title} — ${current + 1}`;
     counter.textContent = `${current + 1}/${p.images.length}`;
-    descEl.innerHTML = `<p>${p.description || ''}</p>`;
+    // "\n\n" in the description becomes a paragraph break
+    descEl.innerHTML = (p.description || '')
+      .split('\n\n').map(t => `<p>${t}</p>`).join('');
   }
 
   /* Project info centred over the blurred photo for 2s,

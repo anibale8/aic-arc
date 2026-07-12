@@ -522,6 +522,9 @@ body.intro-rise .project-info { opacity: 0; }
 
 .project-description.open { display: block; }
 
+/* Blank line between description paragraphs */
+.project-description p + p { margin-top: 1em; }
+
 /* ===== ABOUT PAGE ===== */
 .info-page {
   /* Clears the Projects dropdown when it opens over the page */
@@ -531,7 +534,14 @@ body.intro-rise .project-info { opacity: 0; }
 
 .info-page h1 {
   font-size: 15px;
+  font-weight: 400; /* Montserrat Regular, not the browser's bold default */
   margin-bottom: 16px;
+}
+
+.info-page .copyright {
+  color: var(--gray);
+  font-size: 12px;
+  margin-top: 24px;
 }
 
 .info-page p {
