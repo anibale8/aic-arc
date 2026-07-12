@@ -439,7 +439,7 @@ function initProject() {
   function loadProject(idx, startAtLast) {
     pIdx = (idx + projects.length) % projects.length;
     const p = projects[pIdx];
-    document.title = `aic.arc — ${p.title}`;
+    document.title = `fre.flier — ${p.title}`;
     history.replaceState(null, '', `project.html?slug=${p.slug}${from ? `&from=${from}` : ''}`);
     infoEl.innerHTML  = infoCells(p);
     introEl.innerHTML = infoCells(p);
